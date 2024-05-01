@@ -1,0 +1,72 @@
+<div class="overlay" *ngIf="isLoading | async">
+    <p-progressSpinner ariaLabel="loading"></p-progressSpinner>
+</div>
+<p-toast></p-toast>
+<div class="grid">
+    <div class="col-12">
+        <div class="card px-6 py-6">
+            <div>
+                <p-messages [(value)]="messages" [enableService]="true"></p-messages>
+            </div>
+            <p-table #dt
+                styleClass="p-datatable-striped p-datatable-custom"
+                [value]="quizs"
+                dataKey="id">
+
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th pSortableColumn="name" style="text-align: center;">Name</th>
+                        <th pSortableColumn="test" style="text-align: center;">Test</th>
+                        <th pSortableColumn="datequiz" style="text-align: center;">Date Quiz</th>
+                        <th pSortableColumn="timestart" style="text-align: center;">Time Start</th>
+                        <th pSortableColumn="timefinish" style="text-align: center;">Time Finish</th>
+                        <th pSortableColumn="totaltime" style="text-align: center;">Total Time</th>
+                        <th pSortableColumn="report" style="text-align: center;">Report Status</th>
+                        <th></th>
+                    </tr>
+                </ng-template>
+
+                <ng-template pTemplate="body" let-quiz>
+                    <tr>
+                        <td style="width:20%; min-width:10rem;"><span class="p-column-title">name</span>
+                            {{quiz.name}}
+                        </td>
+                        <td style="width:14%; min-width:10rem;">
+                            <span class="p-column-title">test</span>
+                            {{quiz.test}}
+                        </td>
+                        <td style="width:10%; min-width:7.5rem;">
+                            <span class="p-column-title">datequiz</span>
+                            {{quiz.datequiz}}
+                        </td>
+                        <td style="width:20%; min-width:10rem;">
+                            <span class="p-column-title">time start</span>
+                            {{quiz.timestart}}
+                        </td>
+                        <td style="width:20%; min-width:10rem;">
+                            <span class="p-column-title">time finish</span>
+                            {{quiz.timefinish}}
+                        </td>
+                        <td style="width:10%; min-width:5rem;">
+                            <span class="p-column-title">totaltime</span>
+                            {{quiz.totaltime}}
+                        </td>
+                        <td style="width:10%; min-width:5rem;">
+                            <span class="p-column-title">report</span>
+                            <span [class]="'quiz-badge status-' + (quiz.report? quiz.report.toLowerCase().replace('-', '') : '')">{{quiz.report}}</span>
+                        </td>
+                        <td>
+                            <div class="flex">
+                                <button pButton pRipple pTooltip="Generate report" tooltipPosition="bottom" icon="pi pi-file-pdf" class="p-button-rounded p-button-primary mr-2" (click)="generateReport(quiz)"></button>
+                                <button pButton pRipple pTooltip="Download report" tooltipPosition="bottom" icon="pi pi-download" class="p-button-rounded p-button-success mr-2" (click)="saveReport(quiz, quiz.id)"></button>
+                            </div>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+        <div>
+            <button pButton pRipple label="Close" icon="pi pi-times" class="p-button-text p-button-secondary" style="float: right;" (click)="closeQuiz()"></button>
+        </div>
+    </div>
+</div>

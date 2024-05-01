@@ -3,7 +3,9 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+    production: false,
+    REMEMBER_ME_EXPIRATION_DAY_DEFAULT: 30
+
 };
 
 /*

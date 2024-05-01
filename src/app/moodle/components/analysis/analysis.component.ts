@@ -2,10 +2,7 @@ import { Component } from '@angular/core';
 import { MessageService } from 'primeng/api';
 import { Analysis } from '../../apis/analysis';
 import { Summary } from '../../apis/summary';
-import { Table } from 'primeng/table';
 import { AnalysisService } from '../../services/analysis.service';
-import { HttpErrorResponse, HttpEvent, HttpEventType, } from '@angular/common/http';
-import { FormControl, FormGroup } from '@angular/forms';
 import { DynamicDialogRef, DynamicDialogConfig, DialogService } from 'primeng/dynamicdialog';
 
 @Component({
@@ -15,29 +12,11 @@ import { DynamicDialogRef, DynamicDialogConfig, DialogService } from 'primeng/dy
     providers: [MessageService, DialogService],
 })
 export class AnalysisComponent {
-    quizDialog: boolean = false;
-
-    deleteProductDialog: boolean = false;
-
-    deleteProductsDialog: boolean = false;
-
     danalysis: Analysis[] = [];
     summarys: Summary[] = [];
 
     analysis: Analysis = {};
     summary: Summary = {};
-
-    selectedProducts: Analysis[] = [];
-
-    submitted: boolean = false;
-
-    cols: any[] = [];
-
-    statuses: any[] = [];
-
-    rowsPerPageOptions = [5, 10, 20];
-
-    filenames: string[] = [];
 
     userid: number;
     quizid: number;
@@ -69,7 +48,7 @@ export class AnalysisComponent {
 
     save(summaryid: string, summary: string) {
         this.analysisService
-            .edit(summaryid, summary.toUpperCase())
+            .edit(summaryid, summary)
             .subscribe((data: Summary[]) => {
                 this.summarys = data;
                 this.messageService.add({
@@ -80,4 +59,5 @@ export class AnalysisComponent {
                 });
             });
     }
+
 }

@@ -4,42 +4,24 @@ import { Quiz } from '../../apis/quiz';
 import { Table } from 'primeng/table';
 import { QuizService } from '../../services/quiz.service';
 import { saveAs } from 'file-saver';
-import { HttpErrorResponse, HttpEvent, HttpEventType } from '@angular/common/http';
+import { HttpErrorResponse } from '@angular/common/http';
 import { DialogService } from 'primeng/dynamicdialog';
 import { AnalysisComponent } from '../analysis/analysis.component';
+import { TooltipModule } from 'primeng/tooltip';
 
 @Component({
     selector: 'app-quiz',
     templateUrl: './quiz.component.html',
     styleUrl: './quiz.component.scss',
-    providers: [MessageService, DialogService],
+    providers: [MessageService, DialogService, TooltipModule],
 })
 export class QuizComponent {
     isLoading = this.quizService.isLoading;
-
     quizDialog: boolean = false;
-
-    deleteProductDialog: boolean = false;
-
-    deleteProductsDialog: boolean = false;
-
     quizs: Quiz[] = [];
-
     quiz: Quiz = {};
-
     selectedProducts: Quiz[] = [];
-
-    submitted: boolean = false;
-
-    cols: any[] = [];
-
-    statuses: any[] = [];
-
-    rowsPerPageOptions = [5, 10, 20];
-
-    filenames: string[] = [];
-
-    fileStatus = { status: '', requestType: '', percent: 0 };
+    userid: number;
 
     constructor(
         public quizService: QuizService,
@@ -89,10 +71,9 @@ export class QuizComponent {
 
     hideDialog() {
         this.quizDialog = false;
-        this.submitted = false;
     }
 
-    saveReport(quiz: Quiz, id: number) {
+    saveReport(quiz: Quiz) {
         this.downloadFile(quiz);
         console.log('Report updated successful');
     }
@@ -105,7 +86,6 @@ export class QuizComponent {
                     'pf_' +
                     quiz.name.replace(' ', '_').toLocaleLowerCase() +
                     '.docx';
-                console.log(res.headers);
                 saveAs(
                     new File([res.body], filename, {
                         type: `${res.headers.get(
@@ -114,7 +94,7 @@ export class QuizComponent {
                     })
                 );
                 this.quizService
-                    .editReport(quiz.id, 'CREATED')
+                    .editReport1(quiz.id, 'CREATED')
                     .subscribe((data: Quiz[]) => {
                         this.quizs = data;
                         this.quizService.hideLoading();
@@ -122,7 +102,30 @@ export class QuizComponent {
             },
             (error: HttpErrorResponse) => {
                 this.quizService
-                    .editReport(quiz.id, 'FAILED')
+                    .editReport1(quiz.id, 'FAILED')
+                    .subscribe((data: Quiz[]) => {
+                        this.quizs = data;
+                        this.quizService.hideLoading();
+                    });
+                console.log('Report dont found');
+            }
+        );
+    }
+
+    generateReport(quiz: Quiz): void {
+        this.quizService.showLoading();
+        this.quizService.generateReport(quiz).subscribe(
+            (res) => {
+                this.quizService
+                    .editReport1(quiz.id, 'CREATED')
+                    .subscribe((data: Quiz[]) => {
+                        this.quizs = data;
+                        this.quizService.hideLoading();
+                    });
+            },
+            (error: HttpErrorResponse) => {
+                this.quizService
+                    .editReport1(quiz.id, 'FAILED')
                     .subscribe((data: Quiz[]) => {
                         this.quizs = data;
                         this.quizService.hideLoading();
@@ -134,10 +137,11 @@ export class QuizComponent {
 
     openAnalysis(quiz: Quiz) {
         const ref = this.dialogService.open(AnalysisComponent, {
-            header: 'Manage Summary and Analysis',
-            width: '70%',
+            header: 'Summary and Analysis',
+            width: '80%',
+            contentStyle: { overflow: 'hidden' },
             data: {
-                userid: quiz.userid,
+                userid: quiz.candidateid,
                 quizid: quiz.quizid,
             },
         });
@@ -145,10 +149,26 @@ export class QuizComponent {
 
     refresh(): void {
         this.quizService.showLoading();
-        this.quizService.refresh().subscribe((data: Quiz[]) => {
-            this.quizs = data;
-            console.log('Quizs Loadeds');
-            this.quizService.hideLoading();
-        });
+        this.quizService.refresh().subscribe(
+            (data: Quiz[]) => {
+                this.quizs = data;
+                console.log('Quizs Loadeds');
+                this.quizService.hideLoading();
+                this.messageService.add({
+                    severity: 'success',
+                    summary: 'Successful',
+                    detail: 'Sync Successful',
+                    life: 3000,
+                });
+            },
+            (error: HttpErrorResponse) => {
+                this.quizService.hideLoading();
+                this.messageService.add({
+                    severity: 'success',
+                    summary: 'Successful',
+                    detail: 'Sync Successful',
+                    life: 3000,
+                });
+            });
     }
 }

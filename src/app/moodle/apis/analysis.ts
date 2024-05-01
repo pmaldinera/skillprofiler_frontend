@@ -7,6 +7,6 @@ export interface Analysis {
     dc?: string;
     profile?: string;
     presummary?: string;
-    userid?: number;
+    candidateid?: number;
     quizid?: number;
 }

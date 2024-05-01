@@ -4,12 +4,16 @@ import { NotfoundComponent } from './demo/components/notfound/notfound.component
 import { AppLayoutComponent } from "./layout/app.layout.component";
 import { QuizComponent } from './moodle/components/quiz/quiz.component';
 import { AnalysisComponent } from './moodle/components/analysis/analysis.component';
+import { CandidateComponent } from './moodle/components/candidate/candidate.component';
+import { LoginComponent } from './moodle/components/auth/login/login.component';
+import { AuthGuard } from './moodle/utils/guards/auth.guard';
 
 @NgModule({
     imports: [
         RouterModule.forRoot([
             {
                 path: '', component: AppLayoutComponent,
+                canActivate: [AuthGuard],
                 children: [
                     { path: '', loadChildren: () => import('./demo/components/dashboard/dashboard.module').then(m => m.DashboardModule) },
                     { path: 'uikit', loadChildren: () => import('./demo/components/uikit/uikit.module').then(m => m.UIkitModule) },
@@ -19,8 +23,11 @@ import { AnalysisComponent } from './moodle/components/analysis/analysis.compone
                     { path: 'pages', loadChildren: () => import('./demo/components/pages/pages.module').then(m => m.PagesModule) },
                     { path: 'quiz', component: QuizComponent },
                     { path: 'analysis', component: AnalysisComponent },
+                    { path: 'candidate', component: CandidateComponent },
+
                 ]
             },
+            { path: 'login', component: LoginComponent },
             { path: 'auth', loadChildren: () => import('./demo/components/auth/auth.module').then(m => m.AuthModule) },
             { path: 'landing', loadChildren: () => import('./demo/components/landing/landing.module').then(m => m.LandingModule) },
             { path: 'notfound', component: NotfoundComponent },

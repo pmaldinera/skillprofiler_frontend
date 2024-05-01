@@ -4,6 +4,7 @@ $gutter: 1rem; //for primeflex grid system
 @import "assets/layout/styles/layout/layout.scss";
 
 /* PrimeNG */
+@import "assets/layout/styles/theme/lara-light-blue/theme.css";
 @import "../node_modules/primeng/resources/primeng.min.css";
 @import "../node_modules/primeflex/primeflex.scss";
 @import "../node_modules/primeicons/primeicons.css";
@@ -13,7 +14,19 @@ $gutter: 1rem; //for primeflex grid system
 @import "assets/demo/styles/badges.scss";
 @import "assets/demo/styles/code.scss";
 
-
+  input[type="text"],
+  input[type="password"],
+  input[type="email"],
+  input[type="date"],
+  input[type="search"],
+  input[type="file"],
+  button,
+  select,
+  textarea {
+      border-width: 2px;
+      text-transform: uppercase !important;
+      font-size: 0.9rem;
+  }
 
 .overlay {
     position: fixed;
@@ -29,3 +42,163 @@ $gutter: 1rem; //for primeflex grid system
     display: flex;
 }
 
+/* p-datatable-custom */
+.p-datatable-custom {
+    tr>td {
+        font-size: 0.9rem;
+        text-transform: uppercase !important;
+    }
+
+    .p-datatable-header {
+        padding: 1rem;
+        margin-bottom: 15px;
+        background-color: #f8f8f8;
+        border-bottom: 2px solid #e8e8e8;
+        text-align: left;
+        box-shadow: 0 2px 3px rgba($color: #000000, $alpha: 0.2);
+        position: -webkit-sticky;
+        /* Safari */
+        position: sticky;
+        top: 97px;
+        z-index: 99;
+    }
+
+    .p-paginator {
+        padding: 1rem;
+    }
+
+    .p-component-overlay {
+        background-color: rgba(255, 255, 255, 0.5);
+    }
+
+    .p-datatable-thead>tr>th {
+        color: #333;
+        text-transform: uppercase;
+        text-align: center;
+        font-size: 0.8rem;
+    }
+
+    .p-datatable-thead>tr>th .pi {
+        color: #ccc;
+    }
+
+    .p-datatable-thead>tr>th:hover {
+        background-color: #f1f1f1;
+    }
+
+    .p-datatable-thead>tr>th:hover .pi {
+        color: #ccc;
+    }
+
+    .p-dropdown-label:not(.p-placeholder) {
+        text-transform: uppercase;
+    }
+
+    .p-datatable-tbody>tr>td .p-column-title {
+        display: none;
+    }
+
+    tr.empty-data td {
+        display: block;
+        padding: 1rem;
+        margin: 0 auto;
+        border: none !important;
+        font-weight: normal;
+        font-size: 1rem;
+        text-align: left;
+        color: #747474;
+    }
+
+    tr.empty-data:hover {
+        background-color: transparent !important;
+    }
+
+    .p-datatable-filters-applied {
+        padding: 10px;
+        margin: 10px 0 0;
+        background-color: #ffe9a2;
+        color: #b18656;
+        font-size: 0.9rem;
+
+        span {
+            font-weight: normal;
+        }
+
+        a {
+            display: block;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    }
+
+    .p-datatable-show-records {
+        margin: 15px 0 0;
+        padding: 10px;
+        border-top: dashed #dadada 1px;
+        text-align: right;
+        font-size: 0.9rem;
+        font-weight: normal;
+
+        strong {
+            font-weight: bold;
+        }
+    }
+
+}
+
+.p-datatable-custom:not(.p-datatable-gridlines) {
+    .p-datatable-tbody>tr>td {
+        cursor: auto;
+    }
+}
+
+
+/* search-fast-box */
+.search-fast-box {
+    display: flex;
+    justify-content: space-between;
+
+    .btn-clear-filter {
+        .p-button-label {
+            display: inline-block;
+        }
+
+        .p-button-icon-left {
+            padding-left: 0;
+        }
+    }
+}
+
+/* see-password */
+.see-password {
+    font-size: 18px;
+    cursor: pointer;
+    position: absolute;
+    top: 45px;
+    right: 15px;
+}
+
+  /* msg-** */
+  div.msg-error {
+      padding: 15px 5px;
+      margin: 0;
+      text-align: center;
+      color: #fff;
+      font-size: 10px;
+      text-transform: uppercase;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 99;
+  }
+
+  div.msg-error {
+      background-color: #cb2222;
+      border-bottom: 3px solid #a71717;
+      border-radius: 0 !important;
+      -moz-border-radius: 0 !important;
+      -webkit-border-radius: 0 !important;
+  }

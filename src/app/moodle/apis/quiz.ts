@@ -1,9 +1,7 @@
 export interface Quiz {
     id?: number;
-    userid?: number;
+    candidateid?: number;
     quizid?: number;
-    name?: string;
-    email?: string;
     test?: string;
     state?: string;
     datequiz?: string;
@@ -12,4 +10,5 @@ export interface Quiz {
     totaltime?: string;
     grade?: number;
     report?: string;
+    name?: string;
 }

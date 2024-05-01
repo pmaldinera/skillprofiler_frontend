@@ -18,7 +18,8 @@ export class AppMenuComponent implements OnInit {
                 label: 'Home',
                 items: [
                     { label: 'Dashboard', icon: 'pi pi-fw pi-home', routerLink: ['/'] },
-                    { label: 'Quiz', icon: 'pi pi-fw pi-circle', routerLink: ['/quiz'] },
+                    { label: 'Candidates', icon: 'pi pi-fw pi-circle', routerLink: ['/candidate'] },
+                    { label: 'Tests', icon: 'pi pi-fw pi-circle', routerLink: ['/quiz'] },
                 ]
             },
             {
@@ -27,6 +28,12 @@ export class AppMenuComponent implements OnInit {
                     { label: 'Measures', icon: 'pi pi-fw pi-cog', routerLink: ['/utilities/icons'] },
                     { label: 'Profiles', icon: 'pi pi-fw pi-cog', routerLink: ['/utilities/icons'] },
                     { label: 'Decatypes', icon: 'pi pi-fw pi-cog', routerLink: ['/utilities/icons'] },
+                    { label: 'Summarys', icon: 'pi pi-fw pi-cog', routerLink: ['/utilities/icons'] },
+                    { label: 'Tests', icon: 'pi pi-fw pi-cog', routerLink: ['/utilities/icons'] },
+                    { label: 'Academic Degrees', icon: 'pi pi-fw pi-cog', routerLink: ['/utilities/icons'] },
+                    { label: 'Positions', icon: 'pi pi-fw pi-cog', routerLink: ['/utilities/icons'] },
+                    { label: 'Customers', icon: 'pi pi-fw pi-cog', routerLink: ['/utilities/icons'] },
+                    { label: 'Users', icon: 'pi pi-fw pi-cog', routerLink: ['/utilities/icons'] },
                 ]
             }
         ];

@@ -1,12 +1,18 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse, HttpEvent, HttpHeaders, HttpResponse } from '@angular/common/http';
+import {
+    HttpClient,
+    HttpErrorResponse,
+    HttpEvent,
+    HttpHeaders,
+    HttpResponse,
+} from '@angular/common/http';
 import { Observable, catchError, throwError, map, Subject } from 'rxjs';
-import { Quiz } from '../apis/quiz';
+import { Candidate } from '../apis/candidate';
 
 @Injectable({
     providedIn: 'root',
 })
-export class QuizService {
+export class CandidateService {
     private apiURL = 'http://127.0.0.1:8000/api/v1';
     isLoading = new Subject<Boolean>();
 
@@ -35,16 +41,16 @@ export class QuizService {
     constructor(private httpClient: HttpClient) {}
 
     getAll(): Observable<any> {
-        return this.httpClient.get(this.apiURL + '/quiz').pipe(
+        return this.httpClient.get(this.apiURL + '/candidate').pipe(
             catchError((error: HttpErrorResponse) => {
                 return throwError(error);
             })
         );
     }
 
-    create(quiz: Quiz): Observable<any> {
+    create(candidate: Candidate): Observable<any> {
         return this.httpClient
-            .post(this.apiURL + '/quiz', JSON.stringify(quiz), this.httpOptions)
+            .post(this.apiURL + '/candidate', JSON.stringify(candidate), this.httpOptions)
             .pipe(
                 catchError((error: HttpErrorResponse) => {
                     return throwError(error);
@@ -52,19 +58,19 @@ export class QuizService {
             );
     }
 
-    find(candidateid: number): Observable<any> {
-        return this.httpClient.get(this.apiURL + '/quiz/' + candidateid).pipe(
+    find(id: number): Observable<any> {
+        return this.httpClient.get(this.apiURL + '/candidate/' + id).pipe(
             catchError((error: HttpErrorResponse) => {
                 return throwError(error);
             })
         );
     }
 
-    edit(quiz: Quiz, id: number): Observable<any> {
+    edit(candidate: Candidate, id: number): Observable<any> {
         return this.httpClient
             .put(
-                this.apiURL + '/quiz/' + id,
-                JSON.stringify(quiz),
+                this.apiURL + '/candidate/' + id,
+                JSON.stringify(candidate),
                 this.httpOptions
             )
             .pipe(
@@ -75,57 +81,11 @@ export class QuizService {
     }
 
     delete(id: number) {
-        return this.httpClient.delete(this.apiURL + '/quiz/' + id).pipe(
+        return this.httpClient.delete(this.apiURL + '/candidate/' + id).pipe(
             catchError((error: HttpErrorResponse) => {
                 return throwError(error);
             })
         );
-    }
-
-    editReport1(id: number, status: string): Observable<any> {
-        return this.httpClient
-            .put(
-                this.apiURL + '/report/?id=' + id + '&status=' + status,
-                this.httpOptions
-            )
-            .pipe(
-                catchError((error: HttpErrorResponse) => {
-                    return throwError(error);
-                })
-            );
-    }
-
-    editReport2(id: number, status: string, candidateid: number): Observable<any> {
-        return this.httpClient
-            .put(
-                this.apiURL + '/report/' + id + '/' + status + '/' + candidateid,
-                this.httpOptions
-            )
-            .pipe(
-                catchError((error: HttpErrorResponse) => {
-                    return throwError(error);
-                })
-            );
-    }
-
-    downloadFile(quiz: Quiz): Observable<any> {
-        return this.httpClient
-            .post(this.apiURL + '/download', JSON.stringify(quiz), this.options)
-            .pipe(
-                catchError((error: HttpErrorResponse) => {
-                    return throwError(error);
-                })
-            );
-    }
-
-    generateReport(quiz: Quiz): Observable<any> {
-        return this.httpClient
-            .post(this.apiURL + '/generate', JSON.stringify(quiz), this.options)
-            .pipe(
-                catchError((error: HttpErrorResponse) => {
-                    return throwError(error);
-                })
-            );
     }
 
     showLoading(): void {
@@ -137,12 +97,20 @@ export class QuizService {
     }
 
     refresh(): Observable<any> {
-        return this.httpClient.get(this.apiURL + '/refresh-quiz').pipe(
+        return this.httpClient.get(this.apiURL + '/refresh-candidate').pipe(
             catchError((error: HttpErrorResponse) => {
                 return throwError(error);
             })
         );
     }
+
+    downloadFile(candidate: Candidate): Observable<any> {
+        return this.httpClient
+            .post(this.apiURL + '/candidate-download', JSON.stringify(candidate), this.options)
+            .pipe(
+                catchError((error: HttpErrorResponse) => {
+                    return throwError(error);
+                })
+            );
+    }
 }
-
-

@@ -1,38 +1,51 @@
 <div class="overlay" *ngIf="isLoading | async">
     <p-progressSpinner ariaLabel="loading"></p-progressSpinner>
 </div>
+<p-toast></p-toast>
 <div class="grid">
     <div class="col-12">
         <div class="card px-6 py-6">
-            <p-toast></p-toast>
-            <p-toolbar styleClass="mb-4">
-                <ng-template pTemplate="left">
-                    <div class="my-2">
-                    </div>
-                </ng-template>
-                <ng-template pTemplate="right">
-                    <button pButton pRipple label="Refresh" icon="pi pi-refresh" class="p-button-info mr-2" (click)="refresh()"></button>
-                </ng-template>
-            </p-toolbar>
+            <p-table #dt
+                styleClass="p-datatable-striped p-datatable-custom"
+                [value]="quizs"
+                responsiveLayout="scroll"
+                [scrollable]="true"
+                scrollHeight="475px"
+                [rows]="10"
+                [globalFilterFields]="['name', 'test']"
+                [paginator]="true"
+                [rowsPerPageOptions]="[10,20,30]"
+                [showCurrentPageReport]="true"
+                currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+                [(selection)]="selectedProducts"
+                selectionMode="multiple"
+                [rowHover]="true"
+                dataKey="id">
 
-            <p-table #dt [value]="quizs" responsiveLayout="scroll" [rows]="10" [globalFilterFields]="['name', 'test']" [paginator]="true" [rowsPerPageOptions]="[10,20,30]" [showCurrentPageReport]="true" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [(selection)]="selectedProducts" selectionMode="multiple" [rowHover]="true" dataKey="id">
                 <ng-template pTemplate="caption">
-                    <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
-                        <h5 class="m-0">Manage Quiz</h5>
-                        <span class="block mt-2 md:mt-0 p-input-icon-left">
-                            <i class="pi pi-search"></i>
-                            <input pInputText type="text" (input)="onGlobalFilter(dt, $event)" placeholder="Search..."  class="w-full sm:w-auto"/>
-                        </span>
+                    <div class="flex search-fast-box">
+                        <div>
+                            <button pButton pRipple label="Sync" pTooltip="Sync data quizs" tooltipPosition="bottom" icon="pi pi-sync" class="p-button-info mr-2" (click)="refresh()"></button>
+                        </div>
+                        <div class="flex md:align-items-center">
+                            <h4 class="m-0">TESTS</h4>
+                        </div>
+                        <div>
+                            <span class="block mt-2 md:mt-0 p-input-icon-left ml-auto">
+                                <i class="pi pi-search"></i>
+                                <input pInputText type="text" (input)="onGlobalFilter(dt, $event)" placeholder="Search..."  class="w-full sm:w-auto"/>
+                            </span>
+                        </div>
                     </div>
                 </ng-template>
+
                 <ng-template pTemplate="header">
                     <tr>
                         <th pSortableColumn="name" style="text-align: center;">Name</th>
-                        <th pSortableColumn="age" style="text-align: center;">Age</th>
-                        <th pSortableColumn="academicdegree" style="text-align: center;">Academic Degree</th>
-                        <th pSortableColumn="position" style="text-align: center;">Position</th>
                         <th pSortableColumn="test" style="text-align: center;">Test</th>
                         <th pSortableColumn="datequiz" style="text-align: center;">Date Quiz</th>
+                        <th pSortableColumn="timestart" style="text-align: center;">Time Start</th>
+                        <th pSortableColumn="timefinish" style="text-align: center;">Time Finish</th>
                         <th pSortableColumn="totaltime" style="text-align: center;">Total Time</th>
                         <th pSortableColumn="report" style="text-align: center;">Report Status</th>
                         <th></th>
@@ -43,18 +56,6 @@
                         <td style="width:20%; min-width:10rem;"><span class="p-column-title">name</span>
                             {{quiz.name}}
                         </td>
-                        <td style="width:5%; min-width:5rem;">
-                            <span class="p-column-title">age</span>
-                            {{quiz.age}}
-                        </td>
-                        <td style="width:20%; min-width:10rem;">
-                            <span class="p-column-title">academicdegree</span>
-                            {{quiz.academicdegree}}
-                        </td>
-                        <td style="width:20%; min-width:10rem;">
-                            <span class="p-column-title">position</span>
-                            {{quiz.position}}
-                        </td>
                         <td style="width:14%; min-width:10rem;">
                             <span class="p-column-title">test</span>
                             {{quiz.test}}
@@ -62,6 +63,14 @@
                         <td style="width:10%; min-width:7.5rem;">
                             <span class="p-column-title">datequiz</span>
                             {{quiz.datequiz}}
+                        </td>
+                        <td style="width:20%; min-width:10rem;">
+                            <span class="p-column-title">time start</span>
+                            {{quiz.timestart}}
+                        </td>
+                        <td style="width:20%; min-width:10rem;">
+                            <span class="p-column-title">time finish</span>
+                            {{quiz.timefinish}}
                         </td>
                         <td style="width:10%; min-width:5rem;">
                             <span class="p-column-title">totaltime</span>
@@ -73,9 +82,9 @@
                         </td>
                         <td>
                             <div class="flex">
-                                <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded mr-2" (click)="editQuiz(quiz)"></button>
-                                <button pButton pRipple icon="pi pi-download" class="p-button-rounded p-button-success mr-2" (click)="saveReport(quiz, quiz.id)"></button>
-                                <button pButton pRipple icon="pi pi-file-edit" class="p-button-rounded p-button-secondary mr-2" (click)="openAnalysis(quiz)"></button>
+                                <button pButton pRipple pTooltip="Generate report" tooltipPosition="bottom" icon="pi pi-file-pdf" class="p-button-rounded p-button-primary mr-2" (click)="generateReport(quiz)"></button>
+                                <button pButton pRipple pTooltip="Download report" tooltipPosition="bottom" icon="pi pi-download" class="p-button-rounded p-button-success mr-2" (click)="saveReport(quiz)"></button>
+                                <button pButton pRipple pTooltip="Show analysis" tooltipPosition="bottom" icon="pi pi-file-edit" class="p-button-rounded p-button-secondary mr-2" (click)="openAnalysis(quiz)"></button>
                             </div>
                         </td>
                     </tr>

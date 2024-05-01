@@ -1,0 +1,240 @@
+<div class="overlay" *ngIf="isLoading | async">
+    <p-progressSpinner ariaLabel="loading"></p-progressSpinner>
+</div>
+<p-toast></p-toast>
+<div class="grid">
+    <div class="col-12">
+        <div class="card px-6 py-6">
+            <p-table #dt
+                styleClass="p-datatable-striped p-datatable-custom"
+                [value]="candidates"
+                responsiveLayout="scroll"
+                [scrollable]="true"
+                scrollHeight="475px"
+                [rows]="10"
+                [globalFilterFields]="['name']"
+                [paginator]="true"
+                [rowsPerPageOptions]="[10,20,30]"
+                [showCurrentPageReport]="true"
+                currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+                [rowHover]="true"
+                dataKey="id">
+
+                <ng-template pTemplate="caption">
+                    <div class="flex search-fast-box">
+                        <div>
+                            <button pButton pRipple label="Sync" pTooltip="Sync data candidates" tooltipPosition="bottom" icon="pi pi-sync" class="p-button-info mr-2" (click)="refresh()"></button>
+                            <button pButton pRipple pTooltip="Add new candidate" tooltipPosition="bottom" icon="pi pi-plus" class="p-button-success mr-2" (click)="newCandidate()"></button>
+                        </div>
+                        <div class="flex md:align-items-center">
+                            <h4 class="m-0">CANDIDATES</h4>
+                        </div>
+                        <div>
+                            <span class="block mt-2 md:mt-0 p-input-icon-left ml-auto">
+                                <i class="pi pi-search"></i>
+                                <input pInputText type="text" (input)="onGlobalFilter(dt, $event)" placeholder="Search..."  class="w-full sm:w-auto"/>
+                            </span>
+                        </div>
+                    </div>
+                </ng-template>
+
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th pSortableColumn="name" style="text-align: center;">Name</th>
+                        <th pSortableColumn="email" style="text-align: center;">Email</th>
+                        <th pSortableColumn="age" style="text-align: center;">Age</th>
+                        <th pSortableColumn="academicdegree" style="text-align: center;">Academic Degree</th>
+                        <th pSortableColumn="position" style="text-align: center;">Position</th>
+                        <th></th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-candidate>
+                    <tr>
+                        <td style="width:20%; min-width:10rem;"><span class="p-column-title">name</span>
+                            {{candidate.name}}
+                        </td>
+                        <td style="width:20%; min-width:7.10rem;">
+                            <span class="p-column-title">email</span>
+                            {{candidate.email}}
+                        </td>
+                        <td style="width:5%; min-width:5rem;">
+                            <span class="p-column-title">age</span>
+                            {{candidate.age}}
+                        </td>
+                        <td style="width:20%; min-width:10rem;">
+                            <span class="p-column-title">academicdegree</span>
+                            {{candidate.academicdegree}}
+                        </td>
+                        <td style="width:20%; min-width:10rem;">
+                            <span class="p-column-title">position</span>
+                            {{candidate.position}}
+                        </td>
+                        <td>
+                            <div class="flex">
+                                <button pButton pRipple pTooltip="Edit Candidate" tooltipPosition="bottom" icon="pi pi-pencil" class="p-button-rounded mr-2" (click)="editCandidate(candidate, academicdegree.id, position.id)"></button>
+                                <button pButton pRipple pTooltip="Download general report" tooltipPosition="bottom" icon="pi pi-download" class="p-button-rounded p-button-success mr-2" (click)="downloadFile(candidate)"></button>
+                                <button pButton pRipple pTooltip="Show Candidate test" tooltipPosition="bottom" icon="pi pi-file-edit" class="p-button-rounded p-button-secondary mr-2" (click)="openQuiz(candidate, 0)"></button>
+                            </div>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+        <form [formGroup]="candidateForm">
+        <p-dialog [(visible)]="candidateDialog" [style]="{width: '550px'}" header="Candidate Details" [modal]="true" class="p-fluid">
+            <ng-template pTemplate="content">
+                <div class="field">
+                    <label for="username" *ngIf="showField">Username</label>
+                    <input type="text" pInputText id="username" value="{{candidate.username}}" *ngIf="showField"/>
+                </div>
+                <div class="field">
+                    <label for="password" *ngIf="showField">Password</label>
+                    <input type="text" pInputText id="password" value="{{candidate.password}}" *ngIf="showField"/>
+                </div>
+                <div class="formgrid grid">
+                    <div class="field col-12 md:col-6">
+                        <label for="firstname">Firstname</label>
+                        <input
+                            #firstName
+                            formControlName="firstname"
+                            type="text"
+                            pInputText
+                            id="firstname"
+                            value="{{candidate.firstname}}"
+                            [ngClass]="{'ng-invalid ng-dirty' : (submitted || f['firstname'].touched) && f['firstname'].errors}"
+                        />
+                        <div *ngIf="(submitted || f['firstname'].touched) && f['firstname'].errors">
+                            <small class="p-error" *ngIf="f['firstname'].errors && f['firstname'].errors['required']">Firstname is required.</small>
+                        </div>
+                    </div>
+                    <div class="field col-12 md:col-6">
+                        <label for="middlename">Middlename</label>
+                        <input
+                            #middleName
+                            formControlName="middlename"
+                            type="text"
+                            pInputText
+                            id="middlename"
+                            value="{{candidate.middlename}}"
+                            [ngClass]="{'ng-invalid ng-dirty' : (submitted || f['middlename'].touched) && f['middlename'].errors}"
+                        />
+                        <div *ngIf="(submitted || f['middlename'].touched) && f['middlename'].errors">
+                            <small class="p-error" *ngIf="(submitted || f['middlename'].dirty) && f['middlename'].errors">Middlename is required.</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="formgrid grid">
+                    <div class="field col-12 md:col-6">
+                        <label for="lastname">Lastname</label>
+                        <input
+                            #lastName
+                            formControlName="lastname"
+                            type="text"
+                            pInputText
+                            id="lastname"
+                            value="{{candidate.lastname}}"
+                            [ngClass]="{'ng-invalid ng-dirty' : (submitted || f['lastname'].touched) && f['lastname'].errors}"
+                        />
+                        <div *ngIf="(submitted || f['lastname'].touched) && f['lastname'].errors">
+                            <small class="p-error" *ngIf="f['lastname'].errors && f['lastname'].errors['required']">Lastname is required.</small>
+                        </div>
+                    </div>
+                    <div class="field col-12 md:col-6">
+                        <label for="alternatename">Alternatename</label>
+                        <input
+                            #alternateName
+                            formControlName="alternatename"
+                            type="text"
+                            pInputText
+                            id="alternatename"
+                            value="{{candidate.alternatename}}"
+                            [ngClass]="{'ng-invalid ng-dirty' : (submitted || f['alternatename'].touched) && f['alternatename'].errors}"
+                        />
+                        <div *ngIf="(submitted || f['alternatename'].touched) && f['alternatename'].errors">
+                            <small class="p-error" *ngIf="f['alternatename'].errors && f['alternatename'].errors['required']">Alternatename is required.</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="field">
+                    <label for="name">Name</label>
+                    <input
+                        type="text"
+                        pInputText
+                        id="name"
+                        [disabled]="true"
+                        value="{{firstName.value+' '+middleName.value+' '+lastName.value+' '+alternateName.value}}"
+                    />
+                </div>
+                <div class="formgrid grid">
+                    <div class="field col-12 md:col-9">
+                        <label for="email">Email</label>
+                        <input
+                            formControlName="email"
+                            type="text"
+                            pInputText
+                            id="email"
+                            value="{{candidate.email}}"
+                            [ngClass]="{'ng-invalid ng-dirty' : (submitted || f['email'].touched) && f['email'].errors}"
+                        />
+                        <div *ngIf="(submitted || f['email'].touched) && f['email'].errors">
+                            <small class="p-error" *ngIf="f['email'].errors && f['email'].errors['required']">Email is required.</small>
+                            <small class="p-error" *ngIf="f['email'].errors && f['email'].errors['email']">Please provide a valid email.</small>
+                        </div>
+                    </div>
+                <div class="field col-12 md:col-3">
+                    <label for="age">Age</label>
+                    <input
+                        formControlName="age"
+                        type="number"
+                        pInputText
+                        id="age"
+                        value="{{candidate.age}}"
+                        [ngClass]="{'ng-invalid ng-dirty' : (submitted || f['age'].touched) && f['age'].errors}"
+                    />
+                    <div *ngIf="(submitted || f['age'].touched) && f['age'].errors">
+                        <small class="p-error" *ngIf="f['age'].errors && f['age'].errors['required']">Age is required.</small>
+                    </div>
+                </div>
+                </div>
+                <div class="field">
+                    <label for="academicdegreeeid">Academic Degree</label>
+                    <p-dropdown
+                        formControlName="academicdegreeid"
+                        dataKey="id"
+                        [options]="academicdegrees"
+                        [(value)]="selectedAcademic"
+                        optionLabel="academicdegree"
+                        optionValue="id"
+                        [showClear]="true"
+                        placeholder="Select a Academic Degree"
+                        [ngClass]="{'ng-invalid ng-dirty' : (submitted || f['academicdegreeid'].touched) && f['academicdegreeid'].errors}">
+                    </p-dropdown>
+                </div>
+                <div class="field">
+                    <label for="positionid">Position</label>
+                    <p-dropdown
+                        formControlName="positionid"
+                        dataKey="id"
+                        [options]="positions"
+                        [(value)]="selectedPosition"
+                        optionLabel="position"
+                        optionValue="id"
+                        [showClear]="true"
+                        placeholder="Select a Position"
+                        [ngClass]="{'ng-invalid ng-dirty' : (submitted || f['positionid'].touched) && f['positionid'].errors}">
+                    </p-dropdown>
+                </div>
+                <div class="flex align-items-center">
+                    <p-checkbox value="{{candidate.status}}" *ngIf="showField" [binary]="true" inputId="status"></p-checkbox>
+                    <label for="status" *ngIf="showField"> Suspended</label>
+                </div>
+            </ng-template>
+
+            <ng-template pTemplate="footer">
+                <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text p-button-danger" (click)="hideDialog()"></button>
+                <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text " (click)="save()"></button>
+            </ng-template>
+        </p-dialog>
+        </form>
+    </div>
+</div>

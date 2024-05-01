@@ -21,12 +21,12 @@ export class AnalysisService {
 
     constructor(private httpClient: HttpClient) {}
 
-    getAnalysis(userid: number, quizid: number): Observable<any> {
+    getAnalysis(candidateid: number, quizid: number): Observable<any> {
         return this.httpClient
             .get(
                 this.apiURL +
-                    '/analysis/?userid=' +
-                    userid +
+                    '/analysis/?candidateid=' +
+                    candidateid +
                     '&quizid=' +
                     quizid
             )
@@ -37,12 +37,12 @@ export class AnalysisService {
             );
     }
 
-    getSummary(userid: number, quizid: number): Observable<any> {
+    getSummary(candidateid: number, quizid: number): Observable<any> {
         return this.httpClient
             .get(
                 this.apiURL +
-                    '/summary?userid=' +
-                    userid +
+                    '/summary?candidateid=' +
+                    candidateid +
                     '&quizid=' +
                     quizid
             )

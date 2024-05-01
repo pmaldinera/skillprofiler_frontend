@@ -1,0 +1,62 @@
+<div *ngIf="errorMessage" class="msg-error" [innerHTML]="errorMessage"></div>
+<div class="surface-ground flex align-items-center justify-content-center min-h-screen min-w-screen overflow-hidden">
+    <div class="flex flex-column align-items-center justify-content-center">
+        <img src="assets/layout/images/logo-dark.svg" alt="FacturaYA - SV" class="mb-5 w-18rem flex-shrink-0">
+        <div style="border-radius: 5px; padding:0.3rem; background: linear-gradient(180deg, var(--primary-color) 10%, rgba(33, 150, 243, 0) 30%);">
+            <div class="w-full surface-card py-6 px-4 sm:px-6" style="border-radius: 5px">
+                <div>
+                    <form [formGroup]="loginForm">
+                        <div class="mb-4">
+                            <label for="username" class="block text-900 font-medium mb-2">Usuario</label>
+                            <input
+                                pInputText
+                                formControlName="username"
+                                type="text"
+                                placeholder="Correo Electrónico"
+                                class="skip-uppercase w-full md:w-20rem"
+                                style="padding: 1rem; text-transform: none !important;"
+                                [ngClass]="{ 'ng-invalid ng-dirty': (isSubmitted || f['username'].touched) && f['username'].errors }">
+                            <div class="invalid-feedback" *ngIf="(isSubmitted || f['username'].touched) && f['username'].errors">
+                                <small class="p-error" *ngIf="f['username'].errors && f['username'].errors['required']">Usuario requerido</small>
+                                <small class="p-error" *ngIf="f['username'].errors && f['username'].errors['email']">Formato correo inválido</small>
+                            </div>
+                        </div>
+
+                        <div class="mb-5" style="position: relative;">
+                            <label for="password" class="block text-900 font-medium mb-2">Clave</label>
+                            <input
+                                pInputText
+                                formControlName="password"
+                                placeholder="Clave"
+                                class="skip-uppercase w-full md:w-20rem"
+                                style="padding: 1rem; text-transform: none !important;"
+                                [type]="isPasswordTextView ? 'text' : 'password'"
+                                [ngClass]="{ 'ng-invalid ng-dirty': (isSubmitted || f['password'].touched) && f['password'].errors }">
+                            <i class="see-password pi" style="top: 35px; right: 15px;" [ngClass]="isPasswordTextView ? 'pi-eye' : 'pi-eye-slash'" (click)="viewPasswordText()"></i>
+                            <div class="invalid-feedback" *ngIf="(isSubmitted || f['password'].touched) && f['password'].errors">
+                                <small class="p-error" *ngIf="f['password'].errors && f['password'].errors['required']">Clave requerida</small>
+                            </div>
+                        </div>
+                        <div class="flex align-items-center justify-content-between mb-3">
+                            <div class="flex align-items-center">
+                                <p-checkbox id="rememberme" formControlName="rememberme" styleClass="mr-2" [binary]="true"></p-checkbox>
+                                <label for="rememberme">Recordar Usuario</label>
+                            </div>
+                            <div class="flex align-items-center"></div>
+                        </div>
+                        <div class="flex align-items-center justify-content-between mb-5">
+                            <div class="flex align-items-center"> </div>
+                            <a class="font-medium no-underline ml-2 text-right cursor-pointer" style="color: var(--primary-color)" [routerLink]="['/auth/password-forgot']">&iexcl;Olvid&eacute; mi clave de acceso!</a>
+                        </div>
+                        <button pButton pRipple label="INGRESAR" class="w-full p-3 text-xl" (click)="submit()"></button>
+                        <div *ngIf="isSubmitted" class="w-full p-3 text-center">
+                            <i class="pi pi-spin pi-spinner" style="font-size: 2.5rem; color: var(--primary-color)"></i>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
